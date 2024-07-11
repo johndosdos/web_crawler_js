@@ -16,16 +16,15 @@ function getURLsFromHTML(htmlBody, baseURL) {
   return urlArray;
 }
 
-async function crawlPage(url) {
-  const response = await fetch(url, {
-    method: "GET",
-    mode: "cors",
-    headers: {
-      "Content-Type": "text/html",
-    },
-  });
-
+async function crawlPage(baseURL, currentURL = baseURL, pages = {}) {
   try {
+    const currentURLnorm = new URL(currentURL, baseURL).toString();
+
+    const response = await fetch(currentURL, {
+      method: "GET",
+      mode: "cors",
+    });
+
     if (response.status >= 400) {
       throw new Error("Client error");
     }
