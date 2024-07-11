@@ -33,13 +33,18 @@ async function crawlPage(baseURL, currentURL = baseURL, pages = {}) {
     });
 
     if (response.status >= 400) {
-      throw new Error("Client error");
+      console.log(`Error: ${response.status} at ${currentURLnorm}`);
+      return pages;
     }
-    if (!response.headers.get("content-type").includes("text/html")) {
-      throw new Error("Content-Type header is not text/html");
+
+    const contentType = response.headers.get("content-type");
+    if (!contentType.includes("text/html")) {
+      console.log(`Error: Non-HTML content-type at ${currentURLnorm}`);
+      return pages;
+    }
     }
   } catch (error) {
-    console.log(error);
+    console.log(`Error: ${error} at ${currentURL}`);
   }
   return response.text();
 }
