@@ -16,4 +16,26 @@ function getURLsFromHTML(htmlBody, baseURL) {
   return urlArray;
 }
 
-export { normalizeURL, getURLsFromHTML };
+async function crawlPage(url) {
+  const response = await fetch(url, {
+    method: "GET",
+    mode: "cors",
+    headers: {
+      "Content-Type": "text/html",
+    },
+  });
+
+  try {
+    if (response.status >= 400) {
+      throw new Error("Client error");
+    }
+    if (!response.headers.get("content-type").includes("text/html")) {
+      throw new Error("Content-Type header is not text/html");
+    }
+  } catch (error) {
+    console.log(error);
+  }
+  return response.text();
+}
+
+export { normalizeURL, getURLsFromHTML, crawlPage };
