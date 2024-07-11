@@ -20,6 +20,13 @@ async function crawlPage(baseURL, currentURL = baseURL, pages = {}) {
   try {
     const currentURLnorm = new URL(currentURL, baseURL).toString();
 
+    if (!(currentURLnorm in pages)) {
+      pages[currentURLnorm] = 1;
+    } else {
+      pages[currentURLnorm] += 1;
+      return pages;
+    }
+
     const response = await fetch(currentURL, {
       method: "GET",
       mode: "cors",
