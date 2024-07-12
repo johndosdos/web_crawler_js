@@ -42,11 +42,22 @@ async function crawlPage(baseURL, currentURL = baseURL, pages = {}) {
       console.log(`Error: Non-HTML content-type at ${currentURLnorm}`);
       return pages;
     }
+
+    const HTMLPage = await response.text();
+    const pageURLs = getURLsFromHTML(HTMLPage, currentURLnorm);
+
+    for (const url of pageURLs) {
+      const urlNorm = new URL(url, baseURL);
+
+      if (urlNorm.hostname !== new URL(baseURL).hostname) {
+        continue;
+      }
+      await crawlPage(baseURL, urlNorm, pages);
     }
   } catch (error) {
     console.log(`Error: ${error} at ${currentURL}`);
   }
-  return response.text();
+  return pages;
 }
 
 export { normalizeURL, getURLsFromHTML, crawlPage };
