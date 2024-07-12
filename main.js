@@ -1,4 +1,5 @@
-import { crawlPage, getURLsFromHTML } from "./crawl.js";
+import { crawlPage } from "./crawl.js";
+import { printReport } from "./report.js";
 
 async function main() {
   let urlArg = process.argv[2];
@@ -14,9 +15,8 @@ async function main() {
     console.log(new Error("Received 0 arguments; 1 argument required."));
   }
 
-  const htmlPage = await crawlPage(process.argv[2]);
-  const urlArray = getURLsFromHTML(htmlPage, process.argv[2]);
-  console.log(urlArray);
+  const rawReport = await crawlPage(urlArg);
+  printReport(rawReport);
 }
 
 main();
